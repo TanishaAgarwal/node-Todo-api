@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
-var Users = mongoose.model('Users', {
-    email:{
-        type: String,
-        require: true,
-        trim: true,
-        minlength: 1
-    }
+var User = mongoose.model('User', {
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 1
+  }
 });
 
-module.exports = {Users};
+module.exports = {User}
