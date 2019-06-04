@@ -1,74 +1,23 @@
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const express = require('express');
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+const {mongoose} = require('./db/mongoo');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
 
-var Todo = mongoose.model('Todo',{
-    text:{
-        type: String,
-        require: true,
-        trim: true,
-        minlength: 1
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    completedAt: {
-        type: Number,
-        default: null
-    }
+var app = express();
+app.use(bodyParser.json());
+
+app.post('/todos', (req,res) => {
+    var todo = new Todo({
+        text: req.body.text
+    });
+    todo.save().then((doc) => {
+       res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
+    });  
 });
-
-
-var todo = new Todo({
-    text: "  the the  "
+app.listen(3000, () => {
+    console.log('server is running on port 3000');
 });
-
-todo.save().then((res) => {
-    console.log(res);
-}, (e) => {
-    console.log(e);
-});
-
-
-var Users = mongoose.model('Users', {
-    email:{
-        type: String,
-        require: true,
-        trim: true,
-        minlength: 1
-    }
-});
-
-var person = new Users({
-    email: "tanisjajnnnfs"
-});
-
-person.save().then((res) => {
-    console.log(res);
-}, (e) => {
-    console.log(e);
-});
-
-/*var newTodo = new Todo({
-    text: 'cooked food'
-});
-
-var secondTodo = new Todo({
-    text: 'platform projects',
-    completed: true,
-    completedAt: 28
-});
-
-newTodo.save().then((result) => {
-    console.log('saved todo ', result);
-}, (e) => {
-    console.log('unable to save todo');
-});
-
-secondTodo.save().then((result) => {
-    console.log('saved todo ', result);
-}, (e) => {
-    console.log('unable to save todo');
-});*/
